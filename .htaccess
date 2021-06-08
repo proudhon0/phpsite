@@ -1,0 +1,49 @@
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^(.*)$ $1.php 
+Options -Indexes
+AddHandler cgi-script .php .pl .py .jsp .asp .htm .shtml .sh .cgi
+Options -ExecCGI
+<Files .htaccess>
+ Order Allow,Deny
+ Deny from all
+</Files>
+#Belleğe alınmış dosyalar için son düzenleme kontrolünü iptal et
+Header unset ETag
+FileETag None
+
+#html ve htm dosyalarını 1 gün süreyle önbelleğe al
+<FilesMatch ".(html|htm)$">
+Header set Cache-Control "max-age=1800"
+</FilesMatch>
+
+#CSS, JavaScript ve Metin dosyalarını 1 hafta süreyle önbelleğe al
+<FilesMatch ".(js|css|txt)$">
+  Header set Cache-Control "max-age=604800"
+</FilesMatch>
+
+#Flash dosyaları ve resimleri 1 ay süreyle önbelleğe al
+<FilesMatch ".(flv|swf|ico|gif|jpg|jpeg|png)$">
+  Header set Cache-Control "max-age=2592000"
+</FilesMatch>
+
+#PHP vb. betik dosyalarını önbelleğe alma
+<FilesMatch "\.(pl|php|cgi|spl|scgi|fcgi)$">
+  Header unset Cache-Control
+</FilesMatch>
+
+#Vary Accept-Encoding header satırını ekler
+<IfModule mod_headers.c>
+<FilesMatch ".(js|css|xml|gz)$">
+	Header append Vary Accept-Encoding
+</FilesMatch>
+</IfModule>
+
+RewriteRule ^blog-oku-([0-9a-zA-Z-_]+)-([0-9]+)$  blog-oku.php?sef=$1&id=$2 [L,QSA]
+
+
+
+
+
+
